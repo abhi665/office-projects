@@ -1,0 +1,21 @@
+      summary: "Create Employee"
+      description: "Creating Employees by Admins and employee_code,mail and ph no is unique for all"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: auth
+          in: formData
+          description: Enter phno or email or employee code.
+          required: true
+          type: string
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: "otp send successfull"
+        '401':
+          description: wrong input
+        '404':
+          description: error

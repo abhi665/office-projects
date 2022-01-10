@@ -1,0 +1,23 @@
+      summary: "Get Employee list"
+      description: "We can get see employee list if you are hr"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: x-access-token
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: get employee list
+        '400':
+          description: you are not hr 
+        '403':
+          description: token missing or invalid
+        '404':
+          description: error

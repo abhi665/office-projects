@@ -1,0 +1,28 @@
+      summary: "Delete employee by id"
+      description: "Delete employee by id"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: x-access-token
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: employee_id
+          in: path
+          description: Emplohyee id.
+          required: true
+          minimum: 1
+          type: string
+        
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: deleted successfully
+        '400':
+          description: employee not found
+        '404':
+          description: error

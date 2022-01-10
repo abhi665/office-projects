@@ -1,0 +1,35 @@
+      summary: "Change Password"
+      description: "Chnage Password Api"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: employee_id
+          in: path
+          description: Emplohyee id.
+          required: true
+          minimum: 1
+          type: string
+        - name: otp
+          in: formData
+          description: Enter Otp.
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Password.
+          required: true
+          type: string
+        - name: password2
+          in: formData
+          description: enter again Password.
+          required: true
+          type: string
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: change password successfully
+        '404':
+          description: error

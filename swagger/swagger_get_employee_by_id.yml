@@ -1,0 +1,30 @@
+      summary: "Get Employee Details By id"
+      description: "Get Employee Details By Id"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: x-access-token
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: employee_id
+          in: path
+          description: Emplohyee id.
+          required: true
+          minimum: 1
+          type: string
+        
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: get employee by id
+        '400':
+          description: you are not hr 
+        '403':
+          description: token missing or invalid
+        '404':
+          description: error

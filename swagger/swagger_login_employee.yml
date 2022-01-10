@@ -1,0 +1,27 @@
+      summary: "Login Employee"
+      description: "Login by employee by employee_code and passwod"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: employee_code
+          in: formData
+          description: Emplohyee Code.
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Password.
+          required: true
+          type: string
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: "emplyee login successfully"
+        '401':
+          description: could not veryfy! 
+        '404':
+          description: error
+  

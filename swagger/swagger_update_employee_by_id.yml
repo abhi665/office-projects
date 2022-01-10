@@ -1,0 +1,57 @@
+      summary: "Update Employee By Id"
+      description: "Updating employee by id"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: x-access-token
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: employee_id
+          in: path
+          description: Emplohyee id.
+          required: true
+          minimum: 1
+          type: string
+        - name: country_name
+          in: formData
+          description: Country Name.
+          type: string
+        - name: first_name
+          in: formData
+          description: First file name.
+          type: string
+        - name: last_name
+          in: formData
+          description: Second file name.
+          type: string
+        - name: employee_code
+          in: formData
+          description: Emplohyee code.
+          type: string
+        - name: employee_role
+          in: formData
+          description: Emplohyee Role.
+          type: string
+        - name: email
+          in: formData
+          description: Email.
+          type: string
+        - name: phno
+          in: formData
+          description: Phone Number.
+          type: string
+        - name: gender
+          in: formData
+          description: Gender Of Employee.
+          type: string
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: "update successfull"
+        '404':
+          description: error

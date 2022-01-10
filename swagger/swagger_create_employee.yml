@@ -1,0 +1,76 @@
+      summary: "Create Employee"
+      description: "Creating Employees by Admins and employee_code,mail and ph no is unique for all"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: x-access-token
+          in: header
+          description: an authorization header
+          required: true
+          type: string
+        - name: country_name
+          in: formData
+          description: Country Name.
+          required: true
+          type: string
+        - name: first_name
+          in: formData
+          description: First file name.
+          required: true
+          type: string
+        - name: last_name
+          in: formData
+          description: Second file name.
+          required: true
+          type: string
+        - name: employee_role
+          in: formData
+          description: Emplohyee Role.
+          required: true
+          type: string
+        - name: employee_code
+          in: formData
+          description: Emplohyee Code.
+          required: true
+          type: string
+        - name: email
+          in: formData
+          description: Email.
+          required: true
+          type: string
+        - name: phno
+          in: formData
+          description: Phone Number.
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Password.
+          required: true
+          type: string
+        - name: password2
+          in: formData
+          description: enter again Password.
+          required: true
+          type: string
+        - name: gender
+          in: formData
+          description: Gender Of Employee.
+          required: true
+          type: string
+      tags:
+        - Employee Manage
+      responses:
+        '200':
+          description: "user create successfull"
+        '404':
+          description: error
+        '401':
+          description: you are not admin
+        '400':
+          description: duplicate email or employee code or ph no
+        '403':
+          description: token missing or invalid
+        

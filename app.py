@@ -6,7 +6,7 @@ from flasgger import Swagger
 from flask_cors import  CORS
 app = Flask(__name__)
 
-cors = CORS(app)
+cors = CORS(app,resources={r"/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 db = Database.connect(app)
@@ -15,12 +15,7 @@ app.config["SWAGGER"] = {"tittle": "Swagger-UI", "universion": 2}
 
 migrate = Migrate(app, db)
 
-# @app.after_request
-# def after_request(response):
-#     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-#     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-#     return response
+
 
 swagger_config = {
     "headers": [],
@@ -38,6 +33,15 @@ swagger_config = {
 }
 
 swagger = Swagger(app, config=swagger_config)
+
+
+# @app.after_request
+
+# def after_request(response):
+#   response.headers.add('Access-Control-Allow-Origin', '*')
+#   response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+#   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+#   return response
 
 
 PREFIX = "/employee"

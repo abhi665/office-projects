@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from help.jwtdecorater import token_required
 from flasgger.utils import swag_from
 import re
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
 db = Database.db()
 
 SECRET_KEY = "SECRATE"
@@ -17,9 +17,8 @@ TIME_JWT = 1440
 
 
 class Employeeview:
-    
     @token_required
-    @cross_origin()
+    # @cross_origin()
     @swag_from("../swagger/swagger_create_employee.yml")
     def create_emp():
         try:
@@ -66,7 +65,7 @@ class Employeeview:
 
     
     @token_required
-    @cross_origin()
+    # @cross_origin()
     @swag_from("../swagger/swagger_get_emplist.yml")
     def get_emplist():
         try:
@@ -91,7 +90,7 @@ class Employeeview:
         except:
             return jsonify({'message': 'error'}),400
 
-    @cross_origin()
+    # @cross_origin()
     @token_required
     @swag_from("../swagger/swagger_get_employee_by_id.yml")
     def get_empbyID(employee_id):
@@ -117,7 +116,7 @@ class Employeeview:
         except:
             return jsonify({'message': 'error'}),404
 
-    @cross_origin()
+    # @cross_origin()
     @swag_from("../swagger/swagger_forgetpass_otp.yml")
     def forgetpass_otp():
         try:
@@ -137,7 +136,7 @@ class Employeeview:
         except:
             return jsonify({'message': 'error'}), 404
 
-    @cross_origin()
+    # @cross_origin()
     @swag_from("../swagger/swagger_changepass.yml")
     def changepass(employee_id):
         try:
@@ -156,7 +155,7 @@ class Employeeview:
         except:
             return jsonify({'message': 'error'}), 404
     
-    @cross_origin()
+    # @cross_origin()
     @token_required
     @swag_from("../swagger/swagger_update_emp.yml")
     def update_emp():
@@ -182,7 +181,7 @@ class Employeeview:
         except:
             return jsonify({'message': 'error'}), 404
     
-    @cross_origin()
+    # @cross_origin()
     @token_required
     @swag_from("../swagger/swagger_update_employee_by_id.yml")
     def update_empbyID(employee_id):
@@ -212,7 +211,7 @@ class Employeeview:
             return jsonify({'message': 'error'}), 404
 
     @swag_from("../swagger/swagger_delete_emp.yml")
-    @cross_origin()
+    # @cross_origin()
     @token_required
     def delete_employee(employee_id):
         try:
@@ -228,7 +227,7 @@ class Employeeview:
             return jsonify({'message': 'error'}), 404
 
     @swag_from("../swagger/swagger_login_employee.yml")
-    @cross_origin()
+    # @cross_origin()
     def login_Emp():
         try:
             if request.method == 'POST':

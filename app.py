@@ -48,7 +48,7 @@ PREFIX = "/employee"
 
 app.add_url_rule(PREFIX+"/", "create_employee", Employeeview.create_emp, methods=["POST"])
 
-app.add_url_rule(PREFIX+"/", "list_employee", Employeeview.get_emplist, methods=["GET"])
+app.add_url_rule(PREFIX+"/list", "list_employee", Employeeview.get_emplist, methods=["GET","POST"])
 
 app.add_url_rule(PREFIX+"/<employee_id>", "list_employee/<employee_id>", Employeeview.get_empbyID, methods=["GET"])
 

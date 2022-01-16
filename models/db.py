@@ -6,7 +6,7 @@ class Database:
     @classmethod
     def connect(self, app):
         # app.config.from_object(os.environ['APP_SETTINGS'])
-        app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:123@localhost:4000/hrm'
+        app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:123@localhost:5432/HRM'
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db = SQLAlchemy(app)
         self.__x = db

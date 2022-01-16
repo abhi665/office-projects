@@ -1,8 +1,10 @@
+from operator import or_
 from typing import NewType
 from flask_sqlalchemy import SQLAlchemy
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from models.country import Country
+from sqlalchemy.sql import or_
 
 db = SQLAlchemy()
 
@@ -34,11 +36,19 @@ class Employee(db.Model):
         self.password = password
         self.gender = gender
         self.otp = otp
-
-    def getlistemp():
-        employeelist = Employee.query.all()
+    def getallemp():
+        employeelist=Employee.query.all()
         return employeelist
-        # with_entities(Employee.employee_code, Employee.email, Employee.phno)
+
+    def getlistemp(search, lower, upper):
+        if search == None or len(search) == 0:
+            employeelist = list(Employee.query.order_by(Employee.employee_id.desc()).limit(upper).all())
+            return employeelist[int(lower):]
+        else:
+            employeelist = list(Employee.query.filter(or_(Employee.employee_code == search, Employee.email == search, Employee.phno == search, Employee.first_name.like("{}%".format(search)))))
+            
+            return employeelist
+        #  with_entities(Employee.employee_code, Employee.email, Employee.phno)
 
     def getempbyID(employee_id):
         employee = Employee.query.filter_by(employee_id=employee_id).first()

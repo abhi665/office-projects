@@ -22,7 +22,7 @@ swagger_config = {
     "specs": [
         {
             "endpoint": "",
-            "route": "/",
+            "route": "/swag",
             # "rule_filter": lambda rule: True,
             # "model_filter": lambda tag: True,
         }

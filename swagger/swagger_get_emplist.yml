@@ -10,6 +10,24 @@
           description: an authorization header
           required: true
           type: string
+        - name: search
+          in: path
+          description: search item.
+          required: true
+          minimum: 1
+          type: string
+        - name: lower
+          in: path
+          description: starting data.
+          required: true
+          minimum: 1
+          type: number
+        - name: upper
+          in: path
+          description: end data.
+          required: true
+          minimum: 1
+          type: number
       tags:
         - Employee Manage
       responses:

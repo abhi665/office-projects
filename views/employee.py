@@ -64,16 +64,12 @@ class Employeeview:
     
     @token_required
     @swag_from("../swagger/swagger_get_emplist.yml")
-    def get_emplist():
-        # try:
+    def get_emplist(search,lower,upper):
+        try:
             token = request.headers['x-access-token']
             data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
             if data['employee_role'] == "hr":
-                search = request.form.get("searchdata")
-                lower = request.form.get('lower')
-                upper = request.form.get('upper')
                 employees = Employee.getlistemp(search, lower, upper)
-                print(search,upper,lower,employees)
                 emplist = []
                 for item in employees:
                     country = Country.lookup(item.country_id)
@@ -87,8 +83,8 @@ class Employeeview:
                         })
                 return jsonify(emplist),200
             return jsonify({'message': 'you are not admin'}),400
-        # except:
-        #     return jsonify({'message': 'error'}),400
+        except:
+            return jsonify({'message': 'error'}),400
 
     @token_required
     @swag_from("../swagger/swagger_get_employee_by_id.yml")

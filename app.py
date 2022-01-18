@@ -48,8 +48,6 @@ PREFIX = "/employee"
 
 app.add_url_rule(PREFIX+"/", "create_employee", Employeeview.create_emp, methods=["POST"])
 
-app.add_url_rule(PREFIX+"/list", "list_employee", Employeeview.get_emplist, methods=["GET","POST"])
-
 app.add_url_rule(PREFIX+"/<employee_id>", "list_employee/<employee_id>", Employeeview.get_empbyID, methods=["GET"])
 
 app.add_url_rule(PREFIX+"/", "update_employee", Employeeview.update_emp, methods=["PUT"])
@@ -57,6 +55,8 @@ app.add_url_rule(PREFIX+"/", "update_employee", Employeeview.update_emp, methods
 app.add_url_rule(PREFIX+"/<employee_id>", "update_employee/<employee_id>", Employeeview.update_empbyID, methods=["PUT"])
 
 app.add_url_rule(PREFIX+"/<employee_id>", "delete_employee/<employee_id>", Employeeview.delete_employee, methods=["DELETE"])
+
+app.add_url_rule(PREFIX+"/list/<search>/<lower>/<upper>", "list_employee/<search>/<lower>/<upper>", Employeeview.get_emplist, methods=["GET"])
 
 app.add_url_rule(PREFIX+"/login", "login_Emp", Employeeview.login_Emp, methods=["POST"])
 

@@ -41,7 +41,7 @@ class Employee(db.Model):
         return employeelist
 
     def getlistemp(search, lower, upper):
-        if search == None or len(search) == 0:
+        if search == None or len(search) == 2:
             employeelist = list(Employee.query.order_by(Employee.employee_id.desc()).limit(upper).all())
             return employeelist[int(lower):]
         else:

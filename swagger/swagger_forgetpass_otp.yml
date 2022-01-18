@@ -1,5 +1,5 @@
-      summary: "Create Employee"
-      description: "Creating Employees by Admins and employee_code,mail and ph no is unique for all"
+      summary: "forget pass"
+      description: "sending otp"
       consumes:
         - multipart/form-data
       produces:

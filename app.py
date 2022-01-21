@@ -33,6 +33,7 @@ swagger_config = {
     "specs_route": "/swagger/",
 }
 
+
 swagger = Swagger(app, config=swagger_config)
 
 

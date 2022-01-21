@@ -23,16 +23,16 @@ class Employeeview:
             token = request.headers['x-access-token']
             data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
             if data['employee_role'] == "hr":
-                    country_name = request.form.get('country_name')
-                    first_name = request.form.get("first_name")
-                    last_name = request.form.get("last_name")
-                    employee_role = request.form.get('employee_role')
-                    employee_code = request.form.get('employee_code')
-                    email = request.form.get('email')
-                    phno = request.form.get('phno')
-                    password = request.form.get('password')
-                    password2 = request.form.get('password2')
-                    gender = request.form.get('gender')
+                    country_name = request.form.get('country_name').lower()
+                    first_name = request.form.get("first_name").lower()
+                    last_name = request.form.get("last_name").lower()
+                    employee_role = request.form.get('employee_role').lower()
+                    employee_code = request.form.get('employee_code').lower()
+                    email = request.form.get('email').lower()
+                    phno = request.form.get('phno').lower()
+                    password = request.form.get('password').lower()
+                    password2 = request.form.get('password2').lower()
+                    gender = request.form.get('gender').lower()
                     countries = Country.query.filter_by(country_name=country_name).first()
                     employeelst = Employee.getallemp()
                     emp_codelst = []
@@ -69,7 +69,7 @@ class Employeeview:
             token = request.headers['x-access-token']
             data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
             if data['employee_role'] == "hr":
-                employees = Employee.getlistemp(search, lower, upper)
+                employees = Employee.getlistemp(search.lower(), lower, upper)
                 emplist = []
                 for item in employees:
                     country = Country.lookup(item.country_id)

@@ -1,0 +1,5 @@
+__pycache__
+help\__pycache__
+migrations\__pycache__
+models\__pycache__
+views\__pycache__

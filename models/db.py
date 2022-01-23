@@ -1,12 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
-# import os
+import os
 class Database:
     __x = None
     
     @classmethod
     def connect(self, app):
-        # app.config.from_object(os.environ['APP_SETTINGS'])
-        app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:123@localhost:5432/HRM'
+        DATABASE_URL_PGSQL=os.environ['DATABASE_URL']
+        app.config['SQLALCHEMY_DATABASE_URI']= DATABASE_URL_PGSQL
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db = SQLAlchemy(app)
         self.__x = db

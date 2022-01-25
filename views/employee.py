@@ -65,7 +65,7 @@ class Employeeview:
     @token_required
     @swag_from("../swagger/swagger_get_emplist.yml")
     def get_emplist(search,lower,upper):
-        # try:
+        try:
             token = request.headers['x-access-token']
             data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
             if data['employee_role'] == "hr":
@@ -83,8 +83,8 @@ class Employeeview:
                         })
                 return jsonify(emplist),200
             return jsonify({'message': 'you are not admin'}),400
-        # except:
-        #     return jsonify({'message': 'error'}),404
+        except:
+            return jsonify({'message': 'error'}),404
 
     @token_required
     @swag_from("../swagger/swagger_get_employee_by_id.yml")

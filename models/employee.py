@@ -1,11 +1,9 @@
-from operator import or_
-from typing import NewType
 from flask_sqlalchemy import SQLAlchemy
 import uuid
+from importlib_metadata import email
 from sqlalchemy.dialects.postgresql import UUID
-from models.country import Country
 from sqlalchemy.sql import or_
-
+from .country import Country
 db = SQLAlchemy()
 
 
@@ -37,18 +35,16 @@ class Employee(db.Model):
         self.gender = gender
         self.otp = otp
     def getallemp():
-        employeelist=Employee.query.all()
+        employeelist=Employee.query.with_entities(Employee.phno,Employee.email,Employee.employee_code).all()
         return employeelist
 
     def getlistemp(search, lower, upper):
-        if search == None or len(search) == 2 or len(search) == 1 or len(search) == 0:
-            employeelist = list(Employee.query.order_by(Employee.employee_id.desc()).limit(upper).all())
+        employeelist = list(Employee.query.with_entities(Employee.employee_code,Employee.employee_role,Employee.first_name,Employee.last_name,Employee.country_id,Employee.employee_id).filter(or_(Employee.employee_code == search, Employee.employee_role == search,Employee.email == search, Employee.phno == search, Employee.country_id == Country.loopupId(search), Employee.first_name.like("{}%".format(search)))).limit(upper))
+        if len(employeelist)==0:
+            employeelist = list(Employee.query.with_entities(Employee.employee_code,Employee.employee_role,Employee.first_name,Employee.last_name,Employee.country_id,Employee.employee_id).order_by(Employee.employee_id.desc()).limit(upper).all())
             return employeelist[int(lower):]
-        else:
-            employeelist = list(Employee.query.filter(or_(Employee.employee_code == search, Employee.email == search, Employee.phno == search, Employee.first_name.like("{}%".format(search)))))
-            
-            return employeelist
-        #  with_entities(Employee.employee_code, Employee.email, Employee.phno)
+        return employeelist[int(lower):]
+         
 
     def getempbyID(employee_id):
         employee = Employee.query.filter_by(employee_id=employee_id).first()

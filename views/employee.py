@@ -21,55 +21,58 @@ class Employeeview:
     def create_emp():
         try:
             token = request.headers['x-access-token']
-            data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             if data['employee_role'] == "hr":
-                    country_name = request.form.get('country_name').lower()
-                    first_name = request.form.get("first_name").lower()
-                    last_name = request.form.get("last_name").lower()
-                    employee_role = request.form.get('employee_role').lower()
-                    employee_code = request.form.get('employee_code').lower()
-                    email = request.form.get('email').lower()
-                    phno = request.form.get('phno').lower()
-                    password = request.form.get('password').lower()
-                    password2 = request.form.get('password2').lower()
-                    gender = request.form.get('gender').lower()
-                    countries = Country.query.filter_by(country_name=country_name).first()
-                    employeelst = Employee.getallemp()
-                    emp_codelst = []
-                    emp_phlist = []
-                    emp_emaillist = []
-                    for item in employeelst:
-                        emp_codelst.append(item.employee_code)
-                        emp_phlist.append(item.phno)
-                        emp_emaillist.append(item.email)
-                    if employee_code in emp_codelst:
-                        return jsonify({'massage': 'emp_code exists'}), 400
-                    if phno in emp_phlist:
-                        return jsonify({'message': 'ph no existes'}), 400
-                    if email in emp_emaillist:
-                        return jsonify({'message': 'email no existes'}), 400
-                    if password!=password2:
-                        return jsonify({'message': 'password not match'}), 400
-                    
-                    password = hashlib.md5(password.encode()).hexdigest()
-                    employees = Employee(countries.country_id, employee_code, first_name, last_name, employee_role, email, phno, password, gender, '')
-                    Database.db().session.add(employees)
-                    Database.db().session.commit()
-                    Database.db().session.flush()
-                    return jsonify({'employee_id':employees.employee_id,'message': 'success'}),200
-            return jsonify({'message': 'you are not admin'}),401
-        except:
-            return jsonify({'message': 'error'}),404
+                country_name = request.form.get('country_name').lower()
+                first_name = request.form.get("first_name").lower()
+                last_name = request.form.get("last_name").lower()
+                employee_role = request.form.get('employee_role').lower()
+                employee_code = request.form.get('employee_code').lower()
+                email = request.form.get('email').lower()
+                phno = request.form.get('phno').lower()
+                password = request.form.get('password').lower()
+                password2 = request.form.get('password2').lower()
+                gender = request.form.get('gender').lower()
+                countries = Country.query.filter_by(country_name=country_name).first()
+                employeelst = Employee.getallemp()
+                emp_codelst = []
+                emp_phlist = []
+                emp_emaillist = []
+                for item in employeelst:
+                    emp_codelst.append(item.employee_code)
+                    emp_phlist.append(item.phno)
+                    emp_emaillist.append(item.email)
+                if employee_code in emp_codelst:
+                    return jsonify({'massage': 'emp_code exists'}), 400
+                if phno in emp_phlist:
+                    return jsonify({'message': 'ph no existes'}), 400
+                if email in emp_emaillist:
+                    return jsonify({'message': 'email no existes'}), 400
+                if password != password2:
+                    return jsonify({'message': 'password not match'}), 400
 
-    
+                password = hashlib.md5(password.encode()).hexdigest()
+                employees = Employee(countries.country_id, employee_code, first_name,
+                                     last_name, employee_role, email, phno, password, gender, '')
+                Database.db().session.add(employees)
+                Database.db().session.commit()
+                Database.db().session.flush()
+                return jsonify({'employee_id': employees.employee_id, 'message': 'success'}), 200
+            return jsonify({'message': 'you are not admin'}), 401
+        except:
+            return jsonify({'message': 'error'}), 404
+
     @token_required
     @swag_from("../swagger/swagger_get_emplist.yml")
-    def get_emplist(search,lower,upper):
+    def get_emplist():
         try:
             token = request.headers['x-access-token']
-            data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            lower = request.args.get('lower')
+            upper = request.args.get('upper')
+            search = request.args.get('search')
             if data['employee_role'] == "hr":
-                employees = Employee.getlistemp(search.lower(), lower, upper)
+                employees = Employee.getlistemp(lower, upper, search)
                 emplist = []
                 for item in employees:
                     country = Country.lookup(item.country_id)
@@ -81,10 +84,10 @@ class Employeeview:
                         'employee_code': item.employee_code,
                         'employee_role': item.employee_role
                         })
-                return jsonify(emplist),200
-            return jsonify({'message': 'you are not admin'}),400
+                return jsonify(emplist), 200
+            return jsonify({'message': 'you are not admin'}), 400
         except:
-            return jsonify({'message': 'error'}),404
+            return jsonify({'message': 'error'}), 404
 
     @token_required
     @swag_from("../swagger/swagger_get_employee_by_id.yml")
@@ -94,39 +97,39 @@ class Employeeview:
             if emp:
                 countries = Country.lookup(emp.country_id)
                 empdetails = ({
-                        'employee_id': emp.employee_id,
-                        'first_name': emp.first_name,
-                        'country_name': countries.country_name,
-                        'last_name': emp.last_name,
-                        'employee_code': emp.employee_code,
-                        'phno': emp.phno,
-                        'email': emp.email,
-                        'employee_role': emp.employee_role,
-                        'gender': emp.gender,
-                        'massage': 'ok'
+                    'employee_id': emp.employee_id,
+                    'first_name': emp.first_name,
+                    'country_name': countries.country_name,
+                    'last_name': emp.last_name,
+                    'employee_code': emp.employee_code,
+                    'phno': emp.phno,
+                    'email': emp.email,
+                    'employee_role': emp.employee_role,
+                    'gender': emp.gender,
+                    'massage': 'ok'
                     })
                 return jsonify(empdetails)
             else:
                 return jsonify({'massage': 'emp not found'}), 400
         except:
-            return jsonify({'message': 'error'}),404
+            return jsonify({'message': 'error'}), 404
 
     @swag_from("../swagger/swagger_forgetpass_otp.yml")
     def forgetpass_otp():
         try:
             auth = request.form.get('auth')
             if re.match(r'[^@]+@[^@]+\.[^@]', auth):
-                emp = Employee.query.filter_by(email = auth).first()
+                emp = Employee.query.filter_by(email=auth).first()
             elif re.match(r'["0-9"]{10}', auth):
-                emp = Employee.query.filter_by(phone = auth).first()
+                emp = Employee.query.filter_by(phone=auth).first()
             else:
-                emp = Employee.query.filter_by(employee_code = auth).first()
+                emp = Employee.query.filter_by(employee_code=auth).first()
             if emp:
                 email = emp.email
                 otp = SendOtp(email)
                 Employee.addotp(emp.employee_id, otp)
-                return jsonify({'employee_id':emp.employee_id,'massage': 'success'}), 200
-            return jsonify({'message': 'wrong emp code or phno or email'}), 401 
+                return jsonify({'employee_id': emp.employee_id, 'massage': 'success'}), 200
+            return jsonify({'message': 'wrong emp code or phno or email'}), 401
         except:
             return jsonify({'message': 'error'}), 404
 
@@ -147,14 +150,13 @@ class Employeeview:
             return jsonify({'message': 'error'}), 400
         except:
             return jsonify({'message': 'error'}), 404
-    
 
     @token_required
     @swag_from("../swagger/swagger_update_emp.yml")
     def update_emp():
         try:
             token = request.headers['x-access-token']
-            data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             emp = Employee.getempbyID(data['employee_id'])
             if emp:
                 country_name = request.form.get('country_name')
@@ -165,21 +167,32 @@ class Employeeview:
                 phno = request.form.get('phno')
                 gender = request.form.get('gender')
                 country_id = None
-                if country_name !=None:
+                if country_name != None:
                     country = Country.lookupbycname(country_name)
                     country_id = country.country_id
-                emp = Employee.updateemp(data['employee_id'], country_id, first_name, last_name, employee_role, email, phno, gender)
+                employeelst = Employee.getempforupdate(data['employee_id'])
+                emp_phlist = []
+                emp_emaillist = []
+                for item in employeelst:
+                    emp_phlist.append(item.phno)
+                    emp_emaillist.append(item.email)
+                if phno in emp_phlist:
+                    return jsonify({'message': 'ph no existes'}), 400
+                if email in emp_emaillist:
+                    return jsonify({'message': 'email no existes'}), 400
+                emp = Employee.updateemp(data['employee_id'], country_id,
+                                         first_name, last_name, employee_role, email, phno, gender)
                 return jsonify({'massage': 'success'}), 200
             return jsonify({'message': 'error'}), 404
         except:
             return jsonify({'message': 'error'}), 404
-    
+
     @token_required
     @swag_from("../swagger/swagger_update_employee_by_id.yml")
     def update_empbyID(employee_id):
         try:
             token = request.headers['x-access-token']
-            data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             if data['employee_role'] == "hr":
                 emp = Employee.getempbyID(employee_id)
                 if emp:
@@ -192,22 +205,37 @@ class Employeeview:
                     phno = request.form.get('phno')
                     gender = request.form.get('emp_gender')
                     country_id = None
-                    if country_name !=None:
+                    if country_name != None:
                         country = Country.lookupbycname(country_name)
                         country_id = country.country_id
-                    emp = Employee.updateempHr(employee_id, employee_code, country_id, first_name, last_name, employee_role, email, phno, gender)
+                    employeelst = Employee.getempforupdate(employee_id)
+                    emp_codelst = []
+                    emp_phlist = []
+                    emp_emaillist = []
+                    for item in employeelst:
+                        emp_codelst.append(item.employee_code)
+                        emp_phlist.append(item.phno)
+                        emp_emaillist.append(item.email)
+                    if employee_code in emp_codelst:
+                        return jsonify({'massage': 'emp_code exists'}), 400
+                    if phno in emp_phlist:
+                        return jsonify({'message': 'ph no existes'}), 400
+                    if email in emp_emaillist:
+                        return jsonify({'message': 'email no existes'}), 400
+                    emp = Employee.updateempHr(employee_id, employee_code, country_id, first_name,
+                                               last_name, employee_role, email, phno, gender)
                     return jsonify({'massage': 'success'}), 200
                 return jsonify({'message': 'error'}), 400
             return jsonify({'message': 'you are not admin'}), 400
         except:
             return jsonify({'message': 'error'}), 404
-    
+
     @token_required
     @swag_from("../swagger/swagger_delete_emp.yml")
     def delete_employee(employee_id):
         try:
             token = request.headers['x-access-token']
-            data = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
+            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             if data['employee_role'] == "hr":
                 emp = Employee.getempbyID(employee_id)
                 if emp:
@@ -232,10 +260,13 @@ class Employeeview:
                 password = auth.get('password')
                 password = hashlib.md5(password.encode()).hexdigest()
                 if password == emp.password:
-                    token = jwt.encode({'employee_id': str(emp.employee_id), 'employee_role': emp.employee_role, 'exp': datetime.utcnow() + timedelta(minutes=TIME_JWT)}, SECRET_KEY, algorithm="HS256")
+                    token = jwt.encode({'employee_id': str(emp.employee_id),
+                                        'employee_role': emp.employee_role,
+                                        'exp': datetime.utcnow() + timedelta(minutes=TIME_JWT)},
+                                       SECRET_KEY, algorithm="HS256")
                     return make_response(jsonify({'token': token,
-                    'employee_id': emp.employee_id,
-                    'employee_role': emp.employee_role}), 201)
+                                                  'employee_id': emp.employee_id,
+                                                  'employee_role': emp.employee_role}), 201)
                 return make_response('could not veryfy!', 401, {'WWW-Authenticate': 'Basic realm ="Login required !!"'})
         except:
             return jsonify({'message': 'error'}), 404

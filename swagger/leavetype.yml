@@ -1,0 +1,17 @@
+      summary: "Leave Type"
+      description: "employee is mentioning here that what type of leave they want "
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: leave_type
+          in: formData
+          description: Enter Type of Leave .
+          required: true
+          type: string
+      tags:
+        - Leave Manage
+      responses:
+        '200':
+          description: "Successfully Leave Type Filled"

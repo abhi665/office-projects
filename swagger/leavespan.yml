@@ -1,0 +1,22 @@
+      summary: "Leave Span"
+      description: "Employees will fill the leave dates here"
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: from_date
+          in: formData
+          description: Enter From date .
+          required: true
+          type: date
+        - name: to_date
+          in: formData
+          description: Enter to date .
+          required: true
+          type: date  
+      tags:
+        - Leave Manage
+      responses:
+        '200':
+          description: "success full leave date applied"

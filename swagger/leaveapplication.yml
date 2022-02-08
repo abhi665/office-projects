@@ -1,0 +1,37 @@
+      summary: "Leave Application"
+      description: ""
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: leave_allotment_id
+          in: formData
+          description: Enter leave allotment id
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: Enter leave description 
+          required: true
+          type: string  
+        - name: leave_days
+          in: formData
+          description: Enter leave days 
+          required: true
+          type: string   
+        - name: leave_days
+          in: formData
+          description: Enter leave days 
+          required: true
+          type: string
+        - name: leave_status
+          in: formData
+          description: Enter leave status 
+          required: true
+          type: string    
+      tags:
+        - Leave Manage
+      responses:
+        '200':
+          description: "success full "

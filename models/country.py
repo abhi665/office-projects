@@ -21,6 +21,7 @@ class Country(db.Model):
     def lookupbycname(country_name):
         country = Country.query.filter_by(country_name=country_name).first()
         return country
+
     def loopupId(country_name):
         country = Country.query.filter_by(country_name=country_name).first()
         if country:

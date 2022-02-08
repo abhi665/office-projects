@@ -26,7 +26,7 @@ def upgrade():
     op.create_table(
         'employees',
         sa.Column('employee_id', UUID, primary_key=True),
-        sa.Column('country_id',UUID, sa.ForeignKey('countries.country_id')),
+        sa.Column('country_id', UUID, sa.ForeignKey('countries.country_id')),
         sa.Column('employee_code', sa.String(255), nullable=False),
         sa.Column('first_name', sa.String(255), nullable=False),
         sa.Column('last_name', sa.String(255), nullable=False),
@@ -41,4 +41,4 @@ def upgrade():
 
 def downgrade():
     op.drop_table('employees')
-    #op.drop_table('countries')
+    op.drop_table('countries')

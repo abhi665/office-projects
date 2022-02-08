@@ -1,0 +1,32 @@
+      summary: "Leave Allotment"
+      description: "leave allotment of employee "
+      consumes:
+        - multipart/form-data
+      produces:
+          - application/json
+      parameters:
+        - name: employee_id
+          in: formData
+          description: Enter employee id.
+          required: true
+          type: string
+        - name: leave_span_id
+          in: formData
+          description: Enter leave span id .
+          required: true
+          type: string 
+        - name: leave_type_id
+          in: formData
+          description: Enter leave type id .
+          required: true
+          type: string 
+        - name: alloted_leave
+          in: formData
+          description: Enter alloted leave.
+          required: true
+          type: int
+      tags:
+        - Leave Manage
+      responses:
+        '200':
+          description: "success full "

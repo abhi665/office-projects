@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 import uuid
-from importlib_metadata import email
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import or_
 from .country import Country
@@ -34,17 +33,39 @@ class Employee(db.Model):
         self.password = password
         self.gender = gender
         self.otp = otp
-    def getallemp():
-        employeelist=Employee.query.with_entities(Employee.phno,Employee.email,Employee.employee_code).all()
-        return employeelist
 
-    def getlistemp(search, lower, upper):
-        employeelist = list(Employee.query.with_entities(Employee.employee_code,Employee.employee_role,Employee.first_name,Employee.last_name,Employee.country_id,Employee.employee_id).filter(or_(Employee.employee_code == search, Employee.employee_role == search,Employee.email == search, Employee.phno == search, Employee.country_id == Country.loopupId(search), Employee.first_name.like("{}%".format(search)))).limit(upper))
-        if len(employeelist)==0:
-            employeelist = list(Employee.query.with_entities(Employee.employee_code,Employee.employee_role,Employee.first_name,Employee.last_name,Employee.country_id,Employee.employee_id).order_by(Employee.employee_id.desc()).limit(upper).all())
+    def getallemp():
+        employeelist = Employee.query.with_entities(Employee.phno, Employee.email, Employee.employee_code).all()
+        return employeelist
+    def getempforupdate(employee_id):
+        employeelist = Employee.query.with_entities(Employee.phno, Employee.email, Employee.employee_code).filter(Employee.employee_id!=employee_id).all()
+        return employeelist
+    def getlistemp(lower, upper, search=None):
+        print(search)
+        if search == None or len(search) == 0 or len(search) == 1 or search == '""':
+            employeelist = list(Employee.query.with_entities(Employee.employee_code,
+                                                             Employee.employee_role,
+                                                             Employee.first_name,
+                                                             Employee.last_name,
+                                                             Employee.country_id,
+                                                             Employee.employee_id).order_by(
+                                                                 Employee.employee_id.desc()).limit(upper).all())
             return employeelist[int(lower):]
+        search=search.lower()
+        employeelist = list(
+            Employee.query.with_entities(Employee.employee_code,
+                                         Employee.employee_role,
+                                         Employee.first_name,
+                                         Employee.last_name,
+                                         Employee.country_id,
+                                         Employee.employee_id).filter(
+                                             or_(Employee.employee_code == search,
+                                                 Employee.employee_role == search,
+                                                 Employee.email == search,
+                                                 Employee.phno == search,
+                                                 Employee.country_id == Country.loopupId(search),
+                                                 Employee.first_name.like("{}%".format(search)))).limit(upper))
         return employeelist[int(lower):]
-         
 
     def getempbyID(employee_id):
         employee = Employee.query.filter_by(employee_id=employee_id).first()
@@ -62,7 +83,8 @@ class Employee(db.Model):
         password = Employee.query.filter_by(employee_id=employee_id).update(dict(password=password))
         db.session.commit()
 
-    def updateemp(employee_id, country_id=None, first_name=None, last_name=None, employee_role=None, email=None, phno=None, gender=None):
+    def updateemp(employee_id, country_id=None, first_name=None,
+                  last_name=None, employee_role=None, email=None, phno=None, gender=None):
         if country_id != None:
             country_id = Employee.query.filter_by(employee_id=employee_id).update(dict(country_id=country_id))
         if first_name != None:
@@ -75,11 +97,12 @@ class Employee(db.Model):
             email = Employee.query.filter_by(employee_id=employee_id).update(dict(email=email))
         if phno != None:
             phno = Employee.query.filter_by(employee_id=employee_id).update(dict(phno=phno))
-        if gender !=None:
+        if gender != None:
             gender = Employee.query.filter_by(employee_id=employee_id).update(dict(gender=gender))
         db.session.commit()
 
-    def updateempHr(employee_id,employee_code=None ,country_id=None, first_name=None, last_name=None, employee_role=None, email=None, phno=None, gender=None):
+    def updateempHr(employee_id, employee_code=None, country_id=None, first_name=None,
+                    last_name=None, employee_role=None, email=None, phno=None, gender=None):
         if employee_code != None:
             employee_code = Employee.query.filter_by(employee_id=employee_id).update(dict(employee_code=employee_code))
         if country_id != None:
@@ -94,7 +117,7 @@ class Employee(db.Model):
             email = Employee.query.filter_by(employee_id=employee_id).update(dict(email=email))
         if phno != None:
             phno = Employee.query.filter_by(employee_id=employee_id).update(dict(phno=phno))
-        if gender!=None:
+        if gender != None:
             gender = Employee.query.filter_by(employee_id=employee_id).update(dict(gender=gender))
         db.session.commit()
 

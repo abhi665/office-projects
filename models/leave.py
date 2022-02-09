@@ -6,6 +6,7 @@ from sqlalchemy.sql.sqltypes import String
 from models.employee import Employee
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import or_,and_
 
 db = SQLAlchemy()
 
@@ -31,14 +32,10 @@ class Leave_allotment(db.Model):
     __tablename__ = 'leave_allotment'
     id = db.Column(UUID(as_uuid=True), primary_key=True,default=uuid.uuid4)
     employee_id = db.Column(UUID(as_uuid=True),db.ForeignKey(Employee.employee_id))
-    leave_span_id = db.Column(UUID(as_uuid=True),db.ForeignKey('leave_span.id'))
-    leave_type_id = db.Column(UUID(as_uuid=True),db.ForeignKey('leave_type.id'))
     alloted_leave = db.Column(db.Integer)
 
-    def __init__(self,employee_id,leave_span_id=null,leave_type_id=null,alloted_leave=15):
+    def __init__(self,employee_id,alloted_leave=15):
         self.employee_id = employee_id
-        self.leave_span_id = leave_span_id
-        self.leave_type_id = leave_type_id
         self.alloted_leave = alloted_leave
     def update(id,leave_left):
         Leave_allotment.query.filter_by(id = id).update(dict(alloted_leave = leave_left))
@@ -46,9 +43,13 @@ class Leave_allotment(db.Model):
     def reset(id):
         Leave_allotment.query.filter_by(employee_id = id).update(dict(alloted_leave = 15))
         db.session.commit()
-    def getlistallotement():
-        leaveallotedlist = Leave_allotment.query.all()
-        return leaveallotedlist
+    def getlistallotement(find):
+        if find==None:
+            leaveallotedlist = Leave_allotment.query.all()
+            return leaveallotedlist
+        else:
+            leaveallotedlist = Leave_allotment.query.filter(or_(Leave_allotment.id == find,Leave_allotment.employee_id == find)).all()
+            return leaveallotedlist
 
 
 class Leave_application(db.Model):
@@ -80,6 +81,20 @@ class Leave_application(db.Model):
 #     __tablename__= 'Leave_approvement' 
 #     id = db.Column(UUID(as_uuid=True), primary_key=True,default=uuid.uuid4)
 
-    def getlistapplication():
-        leavelist = Leave_application.query.all()
-        return leavelist
+    def getlistapplication(find,status):
+        if find == '':
+            find = None
+        if status == '':
+            status = None
+        if find==None and status == None:
+            leavelist = Leave_application.query.all()
+            return leavelist
+        elif find!=None and status == None:
+            leavelist = Leave_application.query.filter(or_(Leave_application.id == find,Leave_application.employee_id == find,Leave_application.leave_span_id == find,Leave_application.leave_type_id == find)).all()
+            return leavelist
+        elif find==None and status != None:
+            leavelist = Leave_application.query.filter(Leave_application.leave_status == status).all()
+            return leavelist
+        else:
+            leavelist = Leave_application.query.filter(or_(Leave_application.id == find,Leave_application.employee_id == find,Leave_application.leave_span_id == find,Leave_application.leave_type_id == find),and_(Leave_application.leave_status == status)).all()
+            return leavelist

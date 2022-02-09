@@ -32,8 +32,6 @@ class Leave:
     @token_required
     def addleave_allotment():
         employee_id = request.form.get('employee_id')
-        leave_span_id = request.form.get('leave_span_id')
-        leave_type_id = request.form.get('leave_type_id')
         alloted_leave = request.form.get('alloted_leave')
         Leave_allotmentdata = Leave_allotment.query.with_entities(Leave_allotment.employee_id).all()
         empid = []
@@ -41,7 +39,7 @@ class Leave:
             empid.append(str(item.employee_id))
         if employee_id in empid:
             return jsonify({"message":"Sir you are not new employee"}), 404
-        leave_allotment_obj = Leave_allotment(employee_id,leave_span_id,leave_type_id,int(alloted_leave)) 
+        leave_allotment_obj = Leave_allotment(employee_id,int(alloted_leave)) 
         Database.db().session.add(leave_allotment_obj)
         Database.db().session.commit()
         Database.db().session.flush()
@@ -50,7 +48,7 @@ class Leave:
     @token_required
     @swag_from("../swagger/leaveapplication.yml")
     def leave_application():
-        # try:
+        try:
             employee_id = request.form.get('employee_id')
             leave_span_id = request.form.get('leave_span_id')
             leave_type_id = request.form.get('leave_type_id')
@@ -66,8 +64,8 @@ class Leave:
                 Database.db().session.flush()
                 return jsonify({"leave_application_id":leave_application_obj.id,"message":"success"})
             return jsonify({"message":"no leaves left"}), 404
-        # except:
-        #     return jsonify({'message':'unexcepted error'}), 404
+        except:
+            return jsonify({'message':'unexcepted error'}), 404
 
     # @token_required
     # @swag_from("../swagger/leaveallotment.yml")
@@ -109,12 +107,26 @@ class Leave:
     @token_required
     @swag_from("../swagger/leaveapplication.yml")
     def get_leavelist():
-        leave_application =  Leave_application.getlistapplication()
+        find = request.args.get('find')
+        status = request.args.get('status')
+        leave_application =  Leave_application.getlistapplication(find,status)
         leave_list = []
         for item in leave_application:
+            empdata = Employee.getempbyID(item.employee_id)
+            leavespandata = Leave_span.query.filter_by(id = item.leave_span_id).first()
+            leavetypedata = Leave_type.query.filter_by(id = item.leave_type_id).first()
             leave_list.append({
                 'id':item.id,
                 'leave_allotment_id':item.leave_allotment_id,
+                'employee_id':item.employee_id,
+                'employee_code':empdata.employee_code,
+                'first_name':empdata.first_name,
+                'last_name':empdata.last_name,
+                'leave_span_id':item.leave_span_id,
+                'from_date':leavespandata.from_date,
+                'to_date':leavespandata.to_date,
+                'leave_type_id':item.leave_type_id,
+                'leave_type':leavetypedata.leave_type,
                 'description':item.description,
                 'leave_days':item.leave_days,
                 'leave_status':item.leave_status,
@@ -124,14 +136,17 @@ class Leave:
     @token_required
     @swag_from("../swagger/leaveapplication.yml")
     def get_listallotement():
-        leave_allotment =  Leave_allotment.getlistallotement()     
+        find = request.args.get('find')
+        leave_allotment =  Leave_allotment.getlistallotement(find)
         leave_alloted_list = []
         for item in leave_allotment:
+            empdata = Employee.getempbyID(item.employee_id)
             leave_alloted_list.append({
                 'id':item.id,
                 'employee_id':item.employee_id,
-                'leave_span_id':item.leave_span_id,
-                'leave_type_id':item.leave_type_id,
+                'employee_code':empdata.employee_code,
+                'first_name':empdata.first_name,
+                'last_name':empdata.last_name,
                 'alloted_leave':item.alloted_leave,
             })
         return jsonify(leave_alloted_list)

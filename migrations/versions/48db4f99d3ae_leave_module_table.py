@@ -34,8 +34,6 @@ def upgrade():
         'leave_allotment', 
         sa.Column('id', UUID, primary_key=True),
         sa.Column('employee_id', UUID, sa.ForeignKey('employees.employee_id')),
-        sa.Column('leave_span_id', UUID, sa.ForeignKey('leave_span.id')),
-        sa.Column('leave_type_id', UUID, sa.ForeignKey('leave_type.id')),
         sa.Column('alloted_leave', sa.Integer, nullable=False),       
     )
 

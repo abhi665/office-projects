@@ -43,7 +43,7 @@ class Employeeview:
                     emp_phlist.append(item.phno)
                     emp_emaillist.append(item.email)
                 if employee_code in emp_codelst:
-                    return jsonify({'massage': 'emp_code exists'}), 400
+                    return jsonify({'message': 'emp_code exists'}), 400
                 if phno in emp_phlist:
                     return jsonify({'message': 'ph no existes'}), 400
                 if email in emp_emaillist:
@@ -106,11 +106,11 @@ class Employeeview:
                     'email': emp.email,
                     'employee_role': emp.employee_role,
                     'gender': emp.gender,
-                    'massage': 'ok'
+                    'message': 'ok'
                     })
                 return jsonify(empdetails)
             else:
-                return jsonify({'massage': 'emp not found'}), 400
+                return jsonify({'message': 'emp not found'}), 400
         except:
             return jsonify({'message': 'error'}), 404
 
@@ -128,7 +128,7 @@ class Employeeview:
                 email = emp.email
                 otp = SendOtp(email)
                 Employee.addotp(emp.employee_id, otp)
-                return jsonify({'employee_id': emp.employee_id, 'massage': 'success'}), 200
+                return jsonify({'employee_id': emp.employee_id, 'message': 'success'}), 200
             return jsonify({'message': 'wrong emp code or phno or email'}), 401
         except:
             return jsonify({'message': 'error'}), 404
@@ -142,11 +142,11 @@ class Employeeview:
                 password = request.form.get('password')
                 password2 = request.form.get('password2')
                 if emp.otp != otp:
-                    return jsonify({'massage': 'wrong otp'}), 400
+                    return jsonify({'message': 'wrong otp'}), 400
                 if password != password2:
-                    return jsonify({'massage': 'password not match'}), 401
+                    return jsonify({'message': 'password not match'}), 401
                 Employee.updatepass(employee_id, hashlib.md5(password.encode()).hexdigest())
-                return jsonify({'massage': 'success'}), 200
+                return jsonify({'message': 'success'}), 200
             return jsonify({'message': 'error'}), 400
         except:
             return jsonify({'message': 'error'}), 404
@@ -182,7 +182,7 @@ class Employeeview:
                     return jsonify({'message': 'email no existes'}), 400
                 emp = Employee.updateemp(data['employee_id'], country_id,
                                          first_name, last_name, employee_role, email, phno, gender)
-                return jsonify({'massage': 'success'}), 200
+                return jsonify({'message': 'success'}), 200
             return jsonify({'message': 'error'}), 404
         except:
             return jsonify({'message': 'error'}), 404
@@ -217,14 +217,14 @@ class Employeeview:
                         emp_phlist.append(item.phno)
                         emp_emaillist.append(item.email)
                     if employee_code in emp_codelst:
-                        return jsonify({'massage': 'emp_code exists'}), 400
+                        return jsonify({'message': 'emp_code exists'}), 400
                     if phno in emp_phlist:
                         return jsonify({'message': 'ph no existes'}), 400
                     if email in emp_emaillist:
                         return jsonify({'message': 'email no existes'}), 400
                     emp = Employee.updateempHr(employee_id, employee_code, country_id, first_name,
                                                last_name, employee_role, email, phno, gender)
-                    return jsonify({'massage': 'success'}), 200
+                    return jsonify({'message': 'success'}), 200
                 return jsonify({'message': 'error'}), 400
             return jsonify({'message': 'you are not admin'}), 400
         except:
@@ -240,8 +240,8 @@ class Employeeview:
                 emp = Employee.getempbyID(employee_id)
                 if emp:
                     Employee.delete(emp)
-                    return jsonify({'massage': 'success'}), 200
-            return jsonify({'massage': 'employee not found'}), 400
+                    return jsonify({'message': 'success'}), 200
+            return jsonify({'message': 'employee not found'}), 400
         except:
             return jsonify({'message': 'error'}), 404
 

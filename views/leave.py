@@ -81,18 +81,20 @@ class Leave:
     #     return jsonify({"message":"no leaves"})
 
     @token_required
-    def leave_allotment_reset(employee_id):
-        Leave_allotment.reset(employee_id)
+    def leave_allotment_reset():
+        Leave_allotment.reset()
         return jsonify({"message":"success"})
 
     @token_required
     @swag_from("../swagger/leaveapprovment.yml")
     def Leave_approvement():
-        Leave_application_id = request.form.get("leave_application_id")
+        Leave_application_id = request.form.get("Leave_application_id")
         Leave_allotment_id = request.form.get("Leave_allotment_id")
         approval = request.form.get("approval")
         Leave_allotmentdata = Leave_allotment.query.filter_by(id = Leave_allotment_id).first()
-        Leave_applicationData = Leave_application.query.filter_by(id = Leave_application_id).first()
+        Leave_applicationData = Leave_application.getdatabyid(Leave_application_id)
+        print(Leave_allotmentdata)
+        print(Leave_applicationData)
         if approval == "yes":
             leave_status = "approved"
             Leave_application.leave_status_update(Leave_applicationData.id,leave_status)            
@@ -101,7 +103,7 @@ class Leave:
             Leave_allotment.update(Leave_allotmentdata.id,leave_left)
             return jsonify({"message":"success"})
         leave_status = "rejected"
-        Leave_application.leave_status_update(Leave_applicationData.id,leave_status)    
+        Leave_application.leave_status_update(Leave_applicationData.id,leave_status)
         return jsonify({"message":"no approval"})  
 
     @token_required
@@ -150,3 +152,19 @@ class Leave:
                 'alloted_leave':item.alloted_leave,
             })
         return jsonify(leave_alloted_list)
+    
+    @token_required
+    def delete_leavespan(leave_span_id):
+        del_leavespan = Leave_span.query.filter_by(id=leave_span_id).first()
+        if del_leavespan:
+            Leave_span.delete(del_leavespan)
+            return ("sucessfully deleted")
+        return ("unsucessful"), 404
+    
+    @token_required
+    def delete_leavetype(leave_type_id):
+        del_leavetype = Leave_type.query.filter_by(id=leave_type_id).first()
+        if del_leavetype:
+            Leave_type.delete(del_leavetype)
+            return ("sucessfully deleted")
+        return ("unsucessful"), 404

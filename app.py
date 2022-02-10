@@ -64,7 +64,7 @@ app.add_url_rule('/leave/type',"type",Leave.leave_type,methods=["POST"])
 
 # app.add_url_rule('/leave/allotment/<employee_id>',"allotment/<employee_id>",Leave.leave_allotment,methods=["POST"])
 
-app.add_url_rule('/leave/allotment_reset/<employee_id>',"allotment_reset/<employee_id>",Leave.leave_allotment_reset,methods=["POST"])
+app.add_url_rule('/leave/allotment_reset',"allotment_reset",Leave.leave_allotment_reset,methods=["GET"])
 
 app.add_url_rule('/leave/application',"application",Leave.leave_application,methods=["POST"])
 
@@ -75,6 +75,10 @@ app.add_url_rule('/leave/get_leavelist',"get_leavelist",Leave.get_leavelist,meth
 app.add_url_rule('/leave/get_listallotement',"get_listallotement",Leave.get_listallotement,methods=["GET"])
 
 app.add_url_rule('/leave/addleave_allotment',"addleave_allotment",Leave.addleave_allotment,methods=["POST"])
+
+app.add_url_rule('/leave/deleteLeavespan/<leave_span_id>',"Leavespan_delete",Leave.delete_leavespan,methods=["DELETE"])
+
+app.add_url_rule('/leave/deleteLeavetype/<leave_type_id>',"Leavetype_delete",Leave.delete_leavetype,methods=["DELETE"])
 
 if __name__ == '__main__':
     app.run(debug=True)

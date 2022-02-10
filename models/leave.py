@@ -19,6 +19,9 @@ class Leave_span(db.Model):
         self.from_date = from_date,
         self.to_date = to_date
 
+    def delete(del_leavespan):
+        db.session.delete(del_leavespan)
+        db.session.commit()
 
 class Leave_type(db.Model):
     __tablename__ = 'leave_type'
@@ -26,6 +29,10 @@ class Leave_type(db.Model):
     leave_type = db.Column(db.String(25))
     def __init__(self,leave_type):
         self.leave_type = leave_type
+        
+    def delete(del_leavetype):
+        db.session.delete(del_leavetype)
+        db.session.commit()
         
     
 class Leave_allotment(db.Model):
@@ -40,8 +47,8 @@ class Leave_allotment(db.Model):
     def update(id,leave_left):
         Leave_allotment.query.filter_by(id = id).update(dict(alloted_leave = leave_left))
         db.session.commit()
-    def reset(id):
-        Leave_allotment.query.filter_by(employee_id = id).update(dict(alloted_leave = 15))
+    def reset():
+        Leave_allotment.query.update(dict(alloted_leave = 15))
         db.session.commit()
     def getlistallotement(find):
         if find==None:
@@ -71,6 +78,9 @@ class Leave_application(db.Model):
         self.description = description
         self.leave_days = leave_days
         self.leave_status = leave_status
+    def getdatabyid(id):
+        leavedata = Leave_application.query.filter_by(id = id).first()
+        return leavedata
     def update(id,leave_days):
         Leave_application.query.filter_by(id = id).update(dict(leave_days = leave_days))
         db.session.commit()    
@@ -87,14 +97,14 @@ class Leave_application(db.Model):
         if status == '':
             status = None
         if find==None and status == None:
-            leavelist = Leave_application.query.all()
+            leavelist = Leave_application.query.order_by(Leave_application.id.desc()).all()
             return leavelist
         elif find!=None and status == None:
-            leavelist = Leave_application.query.filter(or_(Leave_application.id == find,Leave_application.employee_id == find,Leave_application.leave_span_id == find,Leave_application.leave_type_id == find)).all()
+            leavelist = Leave_application.query.filter(or_(Leave_application.id == find,Leave_application.employee_id == find,Leave_application.leave_span_id == find,Leave_application.leave_type_id == find)).order_by(Leave_application.id.desc()).all()
             return leavelist
         elif find==None and status != None:
             leavelist = Leave_application.query.filter(Leave_application.leave_status == status).all()
             return leavelist
         else:
-            leavelist = Leave_application.query.filter(or_(Leave_application.id == find,Leave_application.employee_id == find,Leave_application.leave_span_id == find,Leave_application.leave_type_id == find),and_(Leave_application.leave_status == status)).all()
+            leavelist = Leave_application.query.filter(or_(Leave_application.id == find,Leave_application.employee_id == find,Leave_application.leave_span_id == find,Leave_application.leave_type_id == find),and_(Leave_application.leave_status == status)).order_by(Leave_application.id.desc()).all()
             return leavelist

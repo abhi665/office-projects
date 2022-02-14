@@ -203,7 +203,7 @@ class Employeeview:
                     employee_role = request.form.get('employee_role')
                     email = request.form.get('email')
                     phno = request.form.get('phno')
-                    gender = request.form.get('emp_gender')
+                    gender = request.form.get('gender')
                     country_id = None
                     if country_name != None:
                         country = Country.lookupbycname(country_name)

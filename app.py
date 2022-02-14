@@ -80,5 +80,7 @@ app.add_url_rule('/leave/deleteLeavespan/<leave_span_id>',"Leavespan_delete",Lea
 
 app.add_url_rule('/leave/deleteLeavetype/<leave_type_id>',"Leavetype_delete",Leave.delete_leavetype,methods=["DELETE"])
 
+app.add_url_rule('/leave/deleteLeaveallot/<employee_id>',"delete_leaveallotment",Leave.delete_leaveallotment,methods=["DELETE"])
+
 if __name__ == '__main__':
     app.run(debug=True)

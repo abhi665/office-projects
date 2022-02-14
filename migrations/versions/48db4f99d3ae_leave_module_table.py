@@ -22,6 +22,8 @@ def upgrade():
         sa.Column('id', UUID, primary_key=True),
         sa.Column('from_date', sa.Date, nullable=False),
         sa.Column('to_date', sa.Date, nullable=False),
+        sa.Column('from_time', sa.String(25), nullable=False),
+        sa.Column('to_time', sa.String(25), nullable=False),
     )
     
     op.create_table(
@@ -34,7 +36,7 @@ def upgrade():
         'leave_allotment', 
         sa.Column('id', UUID, primary_key=True),
         sa.Column('employee_id', UUID, sa.ForeignKey('employees.employee_id')),
-        sa.Column('alloted_leave', sa.Integer, nullable=False),       
+        sa.Column('alloted_leave', sa.Float(4,2), nullable=False),       
     )
 
     op.create_table(
@@ -45,8 +47,8 @@ def upgrade():
         sa.Column('leave_span_id', UUID, sa.ForeignKey('leave_span.id')),
         sa.Column('leave_type_id', UUID, sa.ForeignKey('leave_type.id')),
         sa.Column('description', sa.String(255), nullable=False),
-        sa.Column('leave_days', sa.String(255), nullable=False),
-        sa.Column('leave_status',sa.String(255),nullable=False),
+        sa.Column('leave_days', sa.Float(4,2), nullable=False),
+        sa.Column('leave_status',sa.String(25),nullable=False),
     )
 
 

@@ -13,7 +13,12 @@ class Leave:
     def leave_span():
         from_date = request.form.get('from_date')
         to_date = request.form.get('to_date')
-        leave_span = Leave_span(from_date,to_date)
+        from_time = request.form.get('from_time')
+        to_time = request.form.get('to_time')
+        if to_date == from_date:
+            if from_time == 'PM' and to_time == "AM":
+                return jsonify({"message":"entered data not valid"}), 404
+        leave_span = Leave_span(from_date,to_date,from_time,to_time)
         Database.db().session.add(leave_span)
         Database.db().session.commit()
         Database.db().session.flush()
@@ -53,7 +58,20 @@ class Leave:
             leave_span_id = request.form.get('leave_span_id')
             leave_type_id = request.form.get('leave_type_id')
             description = request.form.get('description')
-            leave_days = request.form.get('leave_days')
+            leavespandata = Leave_span.query.filter_by(id = leave_span_id).first()
+            if leavespandata.to_date == leavespandata.from_date:
+                leave_days = 0.5
+            elif leavespandata.from_time == "AM" and leavespandata.to_time == "PM":
+                leave = leavespandata.to_date - leavespandata.from_date
+                leave = float(leave.days)+0.5
+                leave_days = leave
+            elif leavespandata.from_time == "PM" and leavespandata.to_time == "AM":
+                leave = leavespandata.to_date - leavespandata.from_date
+                leave = float(leave.days)-0.5
+                leave_days = leave
+            else:
+                leave = leavespandata.to_date - leavespandata.from_date
+                leave_days = str(leave.days)
             Leave_allotmentdata = Leave_allotment.query.filter_by(employee_id = employee_id).first()
             leave_allotment_id = Leave_allotmentdata.id
             if int(leave_days) <= Leave_allotmentdata.alloted_leave:
@@ -66,19 +84,6 @@ class Leave:
             return jsonify({"message":"no leaves left"}), 404
         except:
             return jsonify({'message':'unexcepted error'}), 404
-
-    # @token_required
-    # @swag_from("../swagger/leaveallotment.yml")
-    # def leave_allotment(employee_id):
-    #     leave_days = request.form.get('leave_days')
-    #     Leave_allotmentdata = Leave_allotment.query.filter_by(employee_id = employee_id).first()
-    #     Leave_applicationData = Leave_application.query.filter_by(leave_allotment_id = Leave_allotmentdata.id).first()
-    #     if int(leave_days) <= Leave_allotmentdata.alloted_leave:
-    #         leave_status = "pending"
-    #         Leave_application.leave_status_update(Leave_applicationData.id,leave_status)            
-    #         return jsonify({"leave_days":leave_days,
-    #                         "message":"success"})
-    #     return jsonify({"message":"no leaves"})
 
     @token_required
     def leave_allotment_reset():
@@ -93,12 +98,10 @@ class Leave:
         approval = request.form.get("approval")
         Leave_allotmentdata = Leave_allotment.query.filter_by(id = Leave_allotment_id).first()
         Leave_applicationData = Leave_application.getdatabyid(Leave_application_id)
-        print(Leave_allotmentdata)
-        print(Leave_applicationData)
         if approval == "yes":
             leave_status = "approved"
             Leave_application.leave_status_update(Leave_applicationData.id,leave_status)            
-            leave_left = (Leave_allotmentdata.alloted_leave - int(Leave_applicationData.leave_days))
+            leave_left = (Leave_allotmentdata.alloted_leave - Leave_applicationData.leave_days)
             print(Leave_allotmentdata.id)
             Leave_allotment.update(Leave_allotmentdata.id,leave_left)
             return jsonify({"message":"success"})
@@ -126,11 +129,14 @@ class Leave:
                 'last_name':empdata.last_name,
                 'leave_span_id':item.leave_span_id,
                 'from_date':leavespandata.from_date,
+                'from_time':leavespandata.from_time,
                 'to_date':leavespandata.to_date,
+                'to_time':leavespandata.to_time,
                 'leave_type_id':item.leave_type_id,
                 'leave_type':leavetypedata.leave_type,
                 'description':item.description,
-                'leave_days':item.leave_days,
+                'leave_days':"{:.2f}".format(item.leave_days),
+                # 'leave_days':leave,
                 'leave_status':item.leave_status,
             })
         return jsonify(leave_list)    
@@ -149,10 +155,10 @@ class Leave:
                 'employee_code':empdata.employee_code,
                 'first_name':empdata.first_name,
                 'last_name':empdata.last_name,
-                'alloted_leave':item.alloted_leave,
+                'alloted_leave': "{:.2f}".format(item.alloted_leave),
             })
         return jsonify(leave_alloted_list)
-    
+
     @token_required
     def delete_leavespan(leave_span_id):
         del_leavespan = Leave_span.query.filter_by(id=leave_span_id).first()
@@ -160,11 +166,19 @@ class Leave:
             Leave_span.delete(del_leavespan)
             return ("sucessfully deleted")
         return ("unsucessful"), 404
-    
+
     @token_required
     def delete_leavetype(leave_type_id):
         del_leavetype = Leave_type.query.filter_by(id=leave_type_id).first()
         if del_leavetype:
             Leave_type.delete(del_leavetype)
+            return ("sucessfully deleted")
+        return ("unsucessful"), 404
+
+    @token_required
+    def delete_leaveallotment(employee_id):
+        del_leaveallot = Leave_allotment.query.filter_by(employee_id=employee_id).first()
+        if del_leaveallot:
+            Leave_allotment.delete(del_leaveallot)
             return ("sucessfully deleted")
         return ("unsucessful"), 404

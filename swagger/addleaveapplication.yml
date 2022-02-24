@@ -10,19 +10,24 @@
           description: an authorization header
           required: true
           type: string
-        - name: Leave_application_id
+        - name: employee_id
           in: formData
-          description: Enter Leave_application_id .
+          description: Enter employeee id .
           required: true
           type: string
-        - name: Leave_allotment_id
+        - name: span_id
           in: formData
-          description: Enter Leave_allotment_id .
+          description: Enter span id .
           required: true
           type: string
-        - name: approval
+        - name: type_id
           in: formData
-          description: Enter yes or no .
+          description: Enter type id .
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: Enter description.
           required: true
           type: string
       tags:

@@ -5,6 +5,11 @@
       produces:
           - application/json
       parameters:
+        - name: x-access-token
+          in: header
+          description: an authorization header
+          required: true
+          type: string
         - name: from_date
           in: formData
           description: Enter From date .
@@ -14,7 +19,17 @@
           in: formData
           description: Enter to date .
           required: true
-          type: date  
+          type: date 
+        - name: from_time
+          in: formData
+          description: Enter from time.
+          required: true
+          type: 
+        - name: to_time
+          in: formData
+          description: Enter to time .
+          required: true
+          type: date 
       tags:
         - Leave Manage
       responses:

@@ -6,6 +6,7 @@ from models.db import Database
 from flasgger.utils import swag_from
 from help.jwtdecorater import token_required
 from sqlalchemy.dialects.postgresql import UUID
+from datetime import date
 
 class Leave:
     @token_required
@@ -35,6 +36,7 @@ class Leave:
         return jsonify({"leave_type_id":leave_type.id,"message":"success"})
 
     @token_required
+    @swag_from("../swagger/addleaveallot.yml") 
     def addleave_allotment():
         employee_id = request.form.get('employee_id')
         alloted_leave = request.form.get('alloted_leave')
@@ -51,7 +53,7 @@ class Leave:
         return jsonify({"leave_allotment_id":leave_allotment_obj.id,"message":"success"})
 
     @token_required
-    @swag_from("../swagger/leaveapplication.yml")
+    @swag_from("../swagger/addleaveapplication.yml")
     def leave_application():
         try:
             employee_id = request.form.get('employee_id')
@@ -59,9 +61,11 @@ class Leave:
             leave_type_id = request.form.get('leave_type_id')
             description = request.form.get('description')
             leavespandata = Leave_span.query.filter_by(id = leave_span_id).first()
-            if leavespandata.to_date == leavespandata.from_date:
+            if leavespandata.to_date == leavespandata.from_date and leavespandata.from_time==leavespandata.to_time :
                 leave_days = 0.5
-            elif leavespandata.from_time == "AM" and leavespandata.to_time == "PM":
+            elif leavespandata.to_date == leavespandata.from_date and leavespandata.from_time!=leavespandata.to_time :
+                leave_days = 1
+            elif leavespandata.from_time == "AM" and leavespandata.to_time == "AM":
                 leave = leavespandata.to_date - leavespandata.from_date
                 leave = float(leave.days)+0.5
                 leave_days = leave
@@ -71,7 +75,7 @@ class Leave:
                 leave_days = leave
             else:
                 leave = leavespandata.to_date - leavespandata.from_date
-                leave_days = str(leave.days)
+                leave_days = float(leave.days) + 1
             Leave_allotmentdata = Leave_allotment.query.filter_by(employee_id = employee_id).first()
             leave_allotment_id = Leave_allotmentdata.id
             if int(leave_days) <= Leave_allotmentdata.alloted_leave:
@@ -86,9 +90,12 @@ class Leave:
             return jsonify({'message':'unexcepted error'}), 404
 
     @token_required
+    @swag_from("../swagger/resetleaveallotment.yml")
     def leave_allotment_reset():
+        # if "01-01" == str(date.today())[5:]:
         Leave_allotment.reset()
         return jsonify({"message":"success"})
+        
 
     @token_required
     @swag_from("../swagger/leaveapprovment.yml")
@@ -102,7 +109,6 @@ class Leave:
             leave_status = "approved"
             Leave_application.leave_status_update(Leave_applicationData.id,leave_status)            
             leave_left = (Leave_allotmentdata.alloted_leave - Leave_applicationData.leave_days)
-            print(Leave_allotmentdata.id)
             Leave_allotment.update(Leave_allotmentdata.id,leave_left)
             return jsonify({"message":"success"})
         leave_status = "rejected"
@@ -142,7 +148,7 @@ class Leave:
         return jsonify(leave_list)    
 
     @token_required
-    @swag_from("../swagger/leaveapplication.yml")
+    @swag_from("../swagger/leaveallotment.yml")
     def get_listallotement():
         find = request.args.get('find')
         leave_allotment =  Leave_allotment.getlistallotement(find)

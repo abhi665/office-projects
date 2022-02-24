@@ -37,11 +37,12 @@ class Employee(db.Model):
     def getallemp():
         employeelist = Employee.query.with_entities(Employee.phno, Employee.email, Employee.employee_code).all()
         return employeelist
+
     def getempforupdate(employee_id):
         employeelist = Employee.query.with_entities(Employee.phno, Employee.email, Employee.employee_code).filter(Employee.employee_id!=employee_id).all()
         return employeelist
+
     def getlistemp(lower, upper, search=None):
-        print(search)
         if search == None or len(search) == 0 or len(search) == 1 or search == '""':
             employeelist = list(Employee.query.with_entities(Employee.employee_code,
                                                              Employee.employee_role,

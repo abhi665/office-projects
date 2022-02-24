@@ -27,6 +27,7 @@ class Leave_span(db.Model):
         db.session.delete(del_leavespan)
         db.session.commit()
 
+
 class Leave_type(db.Model):
     __tablename__ = 'leave_type'
     id = db.Column(UUID(as_uuid=True), primary_key=True,default=uuid.uuid4)
@@ -64,6 +65,7 @@ class Leave_allotment(db.Model):
     def delete(del_leaveallot):
         db.session.delete(del_leaveallot)
         db.session.commit()
+
 
 class Leave_application(db.Model):
     __tablename__= 'leave_application'
@@ -114,4 +116,3 @@ class Leave_application(db.Model):
         else:
             leavelist = Leave_application.query.filter(or_(Leave_application.id == find,Leave_application.employee_id == find,Leave_application.leave_span_id == find,Leave_application.leave_type_id == find),and_(Leave_application.leave_status == status)).order_by(Leave_application.id.desc()).all()
             return leavelist
-    

@@ -6,7 +6,6 @@ db = SQLAlchemy()
 
 class Country(db.Model):
     __tablename__ = 'countries'
-
     country_id = db.Column(UUID(as_uuid=True), primary_key=True)
     country_name = db.Column(db.String())
 

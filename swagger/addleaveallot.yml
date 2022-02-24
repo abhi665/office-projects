@@ -1,5 +1,5 @@
-      summary: "Leave application"
-      description: "Leave add application"
+      summary: "Leave allotment"
+      description: "Leave allotment"
       consumes:
         - multipart/form-data
       produces:
@@ -10,19 +10,14 @@
           description: an authorization header
           required: true
           type: string
-        - name: Leave_application_id
+        - name: employee_id
           in: formData
-          description: Enter Leave_application_id .
+          description: Enter employeee id .
           required: true
           type: string
-        - name: Leave_allotment_id
+        - name: alloted_leave
           in: formData
-          description: Enter Leave_allotment_id .
-          required: true
-          type: string
-        - name: approval
-          in: formData
-          description: Enter yes or no .
+          description: Enter alloted leave.
           required: true
           type: string
       tags:

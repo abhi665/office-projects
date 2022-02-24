@@ -1,5 +1,5 @@
-      summary: "Leave Application"
-      description: ""
+      summary: "Leave reset"
+      description: "Leave reset allotment"
       consumes:
         - multipart/form-data
       produces:
@@ -10,16 +10,8 @@
           description: an authorization header
           required: true
           type: string
-        - name: find
-          in: query
-          description: starting data.
-          type: string
-        - name: status
-          in: query
-          description: starting data.
-          type: string
       tags:
         - Leave Manage
       responses:
         '200':
-          description: "success full "
+          description: "Successfully Leave reset"

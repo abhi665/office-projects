@@ -1,10 +1,15 @@
       summary: "Leave Type"
-      description: "employee is mentioning here that what type of leave they want "
+      description: "add leave type "
       consumes:
         - multipart/form-data
       produces:
           - application/json
       parameters:
+        - name: x-access-token
+          in: header
+          description: an authorization header
+          required: true
+          type: string
         - name: leave_type
           in: formData
           description: Enter Type of Leave .

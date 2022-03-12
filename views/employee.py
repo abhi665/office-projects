@@ -15,7 +15,11 @@ SECRET_KEY = "SECRATE"
 TIME_JWT = 1440
 
 
+# cloudinary.config(cloud_name =  "covid-home-care",api_key="456369572587915", 
+#     api_secret="MnW-kFzNpKedL6He-twzFBTBLS0")
+
 class Employeeview:
+    
     @token_required
     @swag_from("../swagger/swagger_create_employee.yml")
     def create_emp():
@@ -23,6 +27,10 @@ class Employeeview:
             token = request.headers['x-access-token']
             data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             if data['employee_role'] == "hr":
+                # file_to_upload = request.files['file']
+                # upload_result = cloudinary.uploader.upload(file_to_upload)
+                # print(upload_result.get("url"))
+                # return jsonify(upload_result)
                 country_name = request.form.get('country_name').lower()
                 first_name = request.form.get("first_name").lower()
                 last_name = request.form.get("last_name").lower()
